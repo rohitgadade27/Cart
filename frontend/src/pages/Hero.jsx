@@ -8,7 +8,7 @@ const Hero = () => {
   const getAllProducts = async () => {
     try {
       const { data } = await axios(
-        "https://cart-inky-eight.vercel.app/api/products/api/products"
+        "https://cart-inky-eight.vercel.app/api/products"
       );
       setProducts(data);
     } catch (error) {

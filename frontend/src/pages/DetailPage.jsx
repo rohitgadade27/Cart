@@ -13,7 +13,7 @@ const DetailPage = () => {
   const getSingleProduct = async () => {
     try {
       const { data, status } = await axios(
-        `https://cart-inky-eight.vercel.app/api/products/api/products/${id}`
+        `https://cart-inky-eight.vercel.app/api/products/${id}`
       );
       setSingleProduct(data);
     } catch (error) {
