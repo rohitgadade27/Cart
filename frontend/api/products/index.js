@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const jsonPath = path.join(__dirname, 'products.json');
+    const jsonPath = path.join(__dirname, '../../products.json');
     const fileContents = await fs.readFile(jsonPath, 'utf8');
     const products = JSON.parse(fileContents);
     
