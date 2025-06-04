@@ -203,20 +203,8 @@ export default function handler(req, res) {
 
   try {
     res.setHeader('Content-Type', 'application/json');
-    res.status(200).json(products);
-  } catch (error) {
-    console.error('Error serving products:', error);
-    res.status(500).json({ 
-      error: 'Failed to serve products data',
-      details: error.message
-    });
-  }
-  try {
-    res.setHeader('Content-Type', 'application/json');
-    // Check for product id in query parameters
     const { id } = req.query;
     if (id !== undefined) {
-      // Convert id to number for comparison
       const productId = Number(id);
       const product = products.find(p => p.id === productId);
       if (!product) {
@@ -226,7 +214,6 @@ export default function handler(req, res) {
       res.status(200).json(product);
       return;
     }
-    // If no id, return all products
     res.status(200).json(products);
   } catch (error) {
     console.error('Error serving products:', error);
@@ -235,5 +222,4 @@ export default function handler(req, res) {
       details: error.message
     });
   }
-
-} 
+}
