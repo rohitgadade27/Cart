@@ -3,9 +3,9 @@ const fs = require('fs').promises;
 
 exports.handler = async function(event, context) {
   try {
-    const jsonPath = path.join(__dirname, '../../backend/data/products.json'); // Adjust if your JSON is elsewhere
-    const data = await fs.readFile(jsonPath, 'utf8');
-    const products = JSON.parse(data);
+    const jsonDirectory = path.join(process.cwd(), '..');
+    const fileContents = await fs.readFile(path.join(jsonDirectory, 'products.json'), 'utf8');
+    const products = JSON.parse(fileContents);
 
     return {
       statusCode: 200,
