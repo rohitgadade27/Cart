@@ -15,7 +15,10 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const jsonPath = path.join(__dirname, '../../products.json');
+    // In Vercel's serverless environment, we need to use the absolute path
+    const jsonPath = path.join(process.cwd(), 'frontend', 'products.json');
+    console.log('Attempting to read from:', jsonPath); // Debug log
+    
     const fileContents = await fs.readFile(jsonPath, 'utf8');
     const products = JSON.parse(fileContents);
     
@@ -26,6 +29,10 @@ module.exports = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     console.error('Error loading products:', error);
-    res.status(500).json({ error: 'Failed to load products data' });
+    res.status(500).json({ 
+      error: 'Failed to load products data',
+      details: error.message,
+      path: path.join(process.cwd(), 'frontend', 'products.json')
+    });
   }
 }; 
