@@ -242,6 +242,13 @@ const products = [
 ];
 
 export default function handler(req, res) {
+  // Block all caching
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '-1');
+  res.setHeader('Surrogate-Control', 'no-store');
+  res.setHeader('Vary', '*');
+  
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -255,12 +262,7 @@ export default function handler(req, res) {
   }
 
   try {
-    // Set cache control headers to prevent caching
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
     res.setHeader('Content-Type', 'application/json');
-    
     res.status(200).json(products);
   } catch (error) {
     console.error('Error serving products:', error);
