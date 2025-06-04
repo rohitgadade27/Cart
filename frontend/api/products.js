@@ -213,18 +213,27 @@ export default function handler(req, res) {
   }
   try {
     res.setHeader('Content-Type', 'application/json');
-
-    // Check if this is a request for a single product
-    const product = products.find(p => p.id === id);
-    
-    if (!product) {
-      throw new Error('Product not found');
+    // Check for product id in query parameters
+    const { id } = req.query;
+    if (id !== undefined) {
+      // Convert id to number for comparison
+      const productId = Number(id);
+      const product = products.find(p => p.id === productId);
+      if (!product) {
+        res.status(404).json({ error: 'Product not found' });
+        return;
+      }
+      res.status(200).json(product);
+      return;
     }
-
-    return product;
+    // If no id, return all products
+    res.status(200).json(products);
   } catch (error) {
-    console.error('Error fetching product:', error);
-    throw error;
+    console.error('Error serving products:', error);
+    res.status(500).json({ 
+      error: 'Failed to serve products data',
+      details: error.message
+    });
   }
 
 } 
