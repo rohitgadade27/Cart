@@ -181,6 +181,20 @@ const products = [
     }
   ];
 
-export default function handler(req, res) {
-  res.status(200).json(products);
-}
+  export default function handler(req, res) {
+    const { id } = req.query;
+  
+    if (id) {
+      // Find product by ID
+      const product = products.find(p => p.id === parseInt(id));
+      
+      if (product) {
+        res.status(200).json(product);
+      } else {
+        res.status(404).json({ message: 'Product not found' });
+      }
+    } else {
+      // Return all products
+      res.status(200).json(products);
+    }
+  }
