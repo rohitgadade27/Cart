@@ -211,4 +211,34 @@ export default function handler(req, res) {
       details: error.message
     });
   }
+  try {
+    res.setHeader('Content-Type', 'application/json');
+
+    // Check if this is a request for a single product
+    const { id } = req.query;
+    
+    if (id) {
+      // Find the product with matching ID
+      const product = products.find(p => p.id === parseInt(id));
+      
+      if (product) {
+        res.status(200).json(product);
+      } else {
+        res.status(404).json({ 
+          error: 'Product not found',
+          details: `No product found with ID ${id}`
+        });
+      }
+    } else {
+      // Return all products if no ID specified
+      res.status(200).json(products);
+    }
+  } catch (error) {
+    console.error('Error serving products:', error);
+    res.status(500).json({ 
+      error: 'Failed to serve products data',
+      details: error.message
+    });
+  }
+
 } 
