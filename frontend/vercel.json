@@ -1,10 +1,7 @@
 {
   "rewrites": [
     { "source": "/api/products", "destination": "/api/products.js" },
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "github": {
-    "silent": true
-  }
+    { "source": "/api/products/:id", "destination": "/api/products/[id].js" },
+    { "source": "/(.*)", "destination": "/frontend/index.html" }
+  ]
 }
