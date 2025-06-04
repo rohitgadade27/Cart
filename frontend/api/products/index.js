@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs');
 
 module.exports = async (req, res) => {
   // Enable CORS
@@ -15,11 +15,35 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // In Vercel's serverless environment, we need to use the absolute path
-    const jsonPath = path.join(process.cwd(), 'frontend', 'products.json');
-    console.log('Attempting to read from:', jsonPath); // Debug log
-    
-    const fileContents = await fs.readFile(jsonPath, 'utf8');
+    // Try multiple possible paths
+    const possiblePaths = [
+      path.join(process.cwd(), 'frontend', 'products.json'),
+      path.join(process.cwd(), 'products.json'),
+      path.join(__dirname, 'products.json'),
+      path.join(__dirname, '..', 'products.json')
+    ];
+
+    let fileContents = null;
+    let usedPath = null;
+
+    for (const filePath of possiblePaths) {
+      try {
+        console.log('Trying to read from:', filePath);
+        if (fs.existsSync(filePath)) {
+          fileContents = fs.readFileSync(filePath, 'utf8');
+          usedPath = filePath;
+          break;
+        }
+      } catch (err) {
+        console.log('Failed to read from:', filePath, err.message);
+      }
+    }
+
+    if (!fileContents) {
+      throw new Error('Could not find products.json in any of the expected locations');
+    }
+
+    console.log('Successfully read from:', usedPath);
     const products = JSON.parse(fileContents);
     
     // Set cache control headers
@@ -32,7 +56,9 @@ module.exports = async (req, res) => {
     res.status(500).json({ 
       error: 'Failed to load products data',
       details: error.message,
-      path: path.join(process.cwd(), 'frontend', 'products.json')
+      stack: error.stack,
+      cwd: process.cwd(),
+      dirname: __dirname
     });
   }
 }; 
