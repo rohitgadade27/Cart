@@ -180,7 +180,7 @@ const products = [
       }
     }
   ];
-  export { products };
+  
   export default function handler(req, res) {
     const {
       query: { id },
